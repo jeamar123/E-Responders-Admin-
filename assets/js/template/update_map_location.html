@@ -1,0 +1,124 @@
+<div id="googleMap" style="width:100%x;height:400px;"></div>
+
+<script type="text/javascript">
+	// Mao ning  para ma focus ang map sa CDO				
+	$("#googleMap").ready(function(){
+		var myCenter = new google.maps.LatLng(8.48554117156531,124.65592492835538);
+			var mapProp = {
+			  center: myCenter,
+			  zoom: 10,
+			  mapTypeId: google.maps.MapTypeId.ROADMAP
+			  };
+
+		var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+
+		var marker = new google.maps.Marker({
+			  position: myCenter,
+			  title:'Click to zoom',
+			  draggable:true,
+			  animation: google.maps.Animation.DROP
+			  });
+
+		marker.setMap(map);
+
+			// Mao ning para makuha ang longitude ug latitude
+		google.maps.event.addListener(map, 'click', function( event ){
+				// Para mka add ug new marker
+				// var marker = new google.maps.Marker({
+				//   position: event.latLng,
+				//   title:'Click to zoom'
+				//   });
+			// alert('Lat'+ event.latLng.lat()+","+event.latLng.lng())
+			marker.setMap(map);
+		});
+
+		google.maps.event.addListener(marker, 'dragend', function( event ){
+			// var marker = new google.maps.Marker({
+			//   position: event.latLng,
+			//   title:'Click to zoom'
+			//   });
+			// if (confirm( 'Save marker ?' )) {
+
+			// };
+			alert('Lat'+ event.latLng.lat()+","+event.latLng.lng())
+			$('body').scope().$broadcast( "long-lang" , event.latLng );
+			// $("#latitude").val(event.latLng.lat());
+			// $("#longitude").val(event.latLng.lng());
+		});
+
+
+			// Zoom to 9 when clicking on marker
+		// google.maps.event.addListener(marker,'click',function() {
+		// 	  map.setZoom(14);
+		// 	  map.setCenter(marker.getPosition());
+		// });
+	});
+</script>
+<br>
+<section class="nav-tabs-custom" style="overflow: hidden" ng-controller="locationSettingtabs as tab">
+    <ul class="nav nav-tabs">
+    	<li class="header">
+    		<i class="fa fa-th"></i>
+    		Location Settings
+    	</li>
+        <li ng-class="{active:tab.isSet(1)}">
+        	<a href ng-click="tab.setTab(1)">General Settings</a>
+        </li>
+        <li ng-class="{active:tab.isSet(2)}">
+        	<a href ng-click="tab.setTab(2)">Advance Settings</a>
+        </li>
+    </ul>
+    <div ng-show="tab.isSet(1)" class="col-md-12" ng-controller="userDeptInfo">
+    	<br>
+    	<section ng-controller="saveLocation">
+	        <form role="form" ng-submit="saveMap()">
+	            <div class="col-md-12">
+	                <div class="form-group">
+	                    <label for="mapName">Department ID</label>
+	                    <input type="text" ng-model="mapdata.dept_id" class="form-control" id="deptID" displaceholder="deptID">
+	                </div>
+	                <div class="form-group">
+	                    <label for="mapName">Map Name</label>
+	                    <input type="text" ng-model="mapdata.map_name" class="form-control" id="mapname" placeholder="Map name">
+	                </div>
+	                <div class="form-group">
+	                    <label for="mapType">Map Type</label>
+	                    <select class="form-control" ng-model="mapdata.road_type">
+	                    	<option value="ROADMAP">Roadmap</option>
+	                    	<option value="SATELLITE">Satellite</option>
+	                    	<option value="HYBRID">Hybrid</option>
+	                    	<option value="TERRAIN">Terrain</option>
+	                    </select>
+	                </div>
+	                <div class="form-group">
+	                	<label>Map Description</label>
+	                	<textarea class="form-control" ng-model="mapdata.map_description" placeholder="Add your map description here..."></textarea>
+	                </div>
+	                <div class="col-xs-4 latLng-location">
+	                	<label>Lat_Lng</label>
+	                	<input type="text" ng-model="mapdata.lat_lng" id="latitude" class="form-control" placeholder="Latitude" readonly>
+	                </div>
+	                <div class="col-xs-4 latLng-location">
+	                	<label>Latitude</label>
+	                	<input type="text" ng-model="maplat" id="latitude" class="form-control" placeholder="Latitude" readonly>
+	                </div>
+	                <div class="col-xs-4 latLng-location">
+	                	<label>Longitude</label>
+	                	<input type="text" ng-model="maplng" id="longitude" class="form-control" placeholder="Longitude" readonly>
+	                </div><br>
+	            </div><!-- /.box-body -->
+
+	            <div class="form-group btn-save-location">
+	                <button type="submit" class="btn btn-primary">Save Map</button>
+	            </div>	
+	        </form> 
+        </section>        
+        <br>
+    </div>
+
+
+    <div ng-show="tab.isSet(2)">
+         <h4>Tab 2</h4>
+    </div>
+
+</section>

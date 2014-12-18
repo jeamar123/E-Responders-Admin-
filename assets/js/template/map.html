@@ -1,0 +1,48 @@
+<div id="googleMap" style="width:100%x;height:400px;"></div>
+<script type="text/javascript">
+	// Mao ning  para ma focus ang map sa CDO				
+	$("#googleMap").ready(function(){
+	
+	var myCenter=new google.maps.LatLng(8.48554117156531,124.65592492835538);
+			var mapProp = {
+			  center: myCenter,
+			  zoom: 15,
+			  mapTypeId: google.maps.MapTypeId.ROADMAP
+			  };
+
+			var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+
+			var marker = new google.maps.Marker({
+			  position: myCenter,
+			  title:'Click to zoom'
+			  });
+
+			marker.setMap(map);
+
+			var contentString = "<h2>Hello World</h2>";
+			
+			var infowindow = new google.maps.InfoWindow({
+			    content: contentString
+			});
+
+			// Mao ning para makuha ang longitude ug latitude
+			google.maps.event.addListener(map, 'click', function( event ){
+				// var marker = new google.maps.Marker({
+				//   position: event.latLng,
+				//   title:'Click to zoom'
+				//   });
+				// alert('Lat'+ event.latLng.lat()+","+event.latLng.lng())
+				marker.setMap(map);
+			});
+			// Pop-up info window
+			google.maps.event.addListener(marker, 'click', function() {
+				infowindow.open(map,marker);
+			});
+			// Zoom to 9 when clicking on marker
+			// google.maps.event.addListener(marker,'click',function() {
+			//   map.setZoom(14);
+			//   map.setCenter(marker.getPosition());
+			//   });
+	});
+	
+</script>

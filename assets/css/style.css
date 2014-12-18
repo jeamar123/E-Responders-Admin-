@@ -1,0 +1,34 @@
+.user-fname-wrapper
+{
+	max-width: 77%;
+}
+.user-fname
+{
+	display: inline-block;
+}
+.loading-view-container
+{
+	position: absolute;
+	margin: auto;
+	margin-top: 15%;
+	margin-left: 38%;
+}
+.btn-save-location
+{
+	margin-left: 14px !important;
+}
+.btn-add-user
+{
+	margin-top: 23px;
+}
+.latLng-location
+{
+	padding-left: 0px !important;
+	padding-bottom: 15px;
+}
+#cover_photo section.container {
+	width: 60%;
+	float: left;
+	margin-left: 13px;
+	margin-bottom: 35px !important;
+}
