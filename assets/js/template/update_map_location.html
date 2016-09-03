@@ -1,59 +1,217 @@
+<input id="pac-input" class="form-control" type="text" placeholder="Search for places"
+	 style="width: 40%;
+	 		position: relative;
+	 		top: 20px !important;
+	 		">
 <div id="googleMap" style="width:100%x;height:400px;"></div>
+<section id="googleMapScript" ng-controller="saveLocation">
+	<div ng-controller="deptWidURL">
+		<script type="text/javascript">
+			// Mao ning  para ma focus ang map sa CDO				
+			$("#googleMap").ready(function(){
 
-<script type="text/javascript">
-	// Mao ning  para ma focus ang map sa CDO				
-	$("#googleMap").ready(function(){
-		var myCenter = new google.maps.LatLng(8.48554117156531,124.65592492835538);
-			var mapProp = {
-			  center: myCenter,
-			  zoom: 10,
-			  mapTypeId: google.maps.MapTypeId.ROADMAP
-			  };
+				var marker_start,lat,lng,zoom;
+				var markers = [];
+			    $('#googleMapScript').on('deptID_URL', function(event, data) {
+					$.get( data.url + 'maps/show_focused_map_details/' + data.dept_id , function( response ) {
+									
+						// alert(response)
+						console.log(response)
+						if ( response== null || response.lat == "" || !response ) { // If the value of response is equal to null
+							// SET DEFAULTS FOR NULL RESPONSE
+							alert('Set your location info')
+							lat = 8.48554117156531; 
+							lng = 124.65592492835538;
+							zoom = 17;
+						}else{
+							lat = response.lat;
+							lng = response.lng;		
+							zoom = response.zoom;
+						}
+						// console.log(lat)
+						// console.log(lng)
+						var myCenter = new google.maps.LatLng(lat,lng);
 
-		var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+						if (response.map_type) {
+							switch(response.map_type){
+								case 'SATELLITE' :
+									var mapProp = {
+									  center: myCenter,
+									  zoom: parseInt(zoom),
+									  mapTypeId: google.maps.MapTypeId.SATELLITE
+									  };break;
+								case 'HYBRID' :
+									var mapProp = {
+									  center: myCenter,
+									  zoom: parseInt(zoom),
+									  mapTypeId: google.maps.MapTypeId.HYBRID
+									  };break;
+								case 'TERRAIN' :
+									var mapProp = {
+									  center: myCenter,
+									  zoom: parseInt(zoom),
+									  mapTypeId: google.maps.MapTypeId.TERRAIN
+									  };break;
+								default :
+									var mapProp = {
+									  center: myCenter,
+									  zoom: parseInt(zoom),
+									  mapTypeId: google.maps.MapTypeId.ROADMAP
+									  };
+							}							
+						}
+						var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
 
-		var marker = new google.maps.Marker({
-			  position: myCenter,
-			  title:'Click to zoom',
-			  draggable:true,
-			  animation: google.maps.Animation.DROP
-			  });
+						var marker = new google.maps.Marker({
+							  position: myCenter,
+							  title:'Click to show information',
+							  draggable:true,
+							  animation: google.maps.Animation.DROP
+							  });			
+				
 
-		marker.setMap(map);
+						var contentString = '<div id="infowindow" class="scrollFix">'+
+												'<label style="color: #367FA9">'+response.dept_name+'</label><br>' +
+												'<span>'+response.address+'<span><br><br>' +
+												'<a href="http://'+response.website+'" target="__blank"><span>'+response.website+'<span></a><br>' +
+												'<span>Tel.# :'+response.hotline_no+' | Mobile # :'+response.hotline_no+'<span><br>' +
+											'</div>';
+						var infowindow = new google.maps.InfoWindow({
+						    content: contentString,
+							hideByClick: true
+						});
 
-			// Mao ning para makuha ang longitude ug latitude
-		google.maps.event.addListener(map, 'click', function( event ){
-				// Para mka add ug new marker
-				// var marker = new google.maps.Marker({
-				//   position: event.latLng,
-				//   title:'Click to zoom'
-				//   });
-			// alert('Lat'+ event.latLng.lat()+","+event.latLng.lng())
-			marker.setMap(map);
-		});
+						// Create the search box and link it to the UI element.
+						var input = /** @type {HTMLInputElement} */(
+							document.getElementById('pac-input'));
+						map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);						
 
-		google.maps.event.addListener(marker, 'dragend', function( event ){
-			// var marker = new google.maps.Marker({
-			//   position: event.latLng,
-			//   title:'Click to zoom'
-			//   });
-			// if (confirm( 'Save marker ?' )) {
+						var searchBox = new google.maps.places.SearchBox(
+						/** @type {HTMLInputElement} */(input));	
 
-			// };
-			alert('Lat'+ event.latLng.lat()+","+event.latLng.lng())
-			$('body').scope().$broadcast( "long-lang" , event.latLng );
-			// $("#latitude").val(event.latLng.lat());
-			// $("#longitude").val(event.latLng.lng());
-		});
+						if (searchBox) {
+							google.maps.event.addListener(searchBox, 'places_changed', function() {
+								
+								var places = searchBox.getPlaces();
+								if (places.length == 0) {
+									
+									return;
+								}						
+
+								for (var i = 0, marker; marker = markers[i]; i++) {
+									marker.setMap(null);
+								}
+
+								// For each place, get the icon, place name, and location.
+								markers = [];
+								var bounds = new google.maps.LatLngBounds();
+								for (var i = 0, place; place = places[i]; i++) {
+									var image = {
+											url: place.icon,
+											size: new google.maps.Size(71, 71),
+											origin: new google.maps.Point(10, 10),
+											anchor: new google.maps.Point(17, 34),
+											scaledSize: new google.maps.Size(25, 25)
+										};
+
+										// Create a marker for each place.
+									var marker2 = new google.maps.Marker({
+											map: map,
+											draggable:true,
+											icon : data.url + 'assets/img/marker-icon/icon3.png',
+											title: place.name,
+											zoom : 16,
+											position: place.geometry.location
+									});
+
+									set_marker2(map);
+									function set_marker2(map){
+										marker2.setMap(map);
+									}		
+
+									bounds.extend(place.geometry.location);
+
+									google.maps.event.addListener(marker2, 'dragstart', function( event ){
+										marker_start = event.latLng;
+									});
+									google.maps.event.addListener(marker2, 'dragend', function( event ){
+										if (confirm( 'Save marker ?' )) {
+											$('body').scope().$broadcast( "long-lang" , event.latLng );
+										}else{
+									        this.setPosition(marker_start);
+									        delete marker_start;   				
+										}
+									});									
+								}
+								// $(input).on('keyup',function(){
+								// 	if ($(this).val().length  == 0 ){
+								// 		marker2.setMap(null);
+								// 		set_marker(map);
+								// 		map.fitBounds(myCenter);
+								// 	}
+								// })
+								map.fitBounds(bounds);
+								var listener = google.maps.event.addListener(map, "idle", function() { 
+									if (map.getZoom() > 16) map.setZoom(16); 
+									google.maps.event.removeListener(listener); 
+								});								
+							});
+
+						}	
 
 
-			// Zoom to 9 when clicking on marker
-		// google.maps.event.addListener(marker,'click',function() {
-		// 	  map.setZoom(14);
-		// 	  map.setCenter(marker.getPosition());
-		// });
-	});
-</script>
+						set_marker(map);
+						function set_marker(map){
+							marker.setMap(map);
+						}
+						function hide_marker(){
+							set_marker(null);
+						}	
+						function show_marker(){
+							set_marker(map);
+						}
+						// Mao ning para makuha ang longitude ug latitude
+						google.maps.event.addListener(map, 'click', function( event ){
+							marker.setMap(map);
+						});
+						// I show niya ang infowindow pag ma hover
+						google.maps.event.addListener(marker, 'click', function( event ){
+							infowindow.open(map, this);
+						});
+						// google.maps.event.addListener(marker, 'mouseover', function( event ){
+						// 	infowindow.open(map, this);
+						// });
+						// google.maps.event.addListener(marker, 'mouseout', function( event ){
+						// 	infowindow.close(map, this);
+						// });
+						// I close niya ang infowindow pag ma di na hover
+						// google.maps.event.addListener(marker, 'mouseout', function( event ){
+						// 	infowindow.close();
+						// });
+						google.maps.event.addListener(marker, 'dragstart', function( event ){
+							marker_start = event.latLng;
+						});
+						google.maps.event.addListener(marker, 'dragend', function( event ){
+							if (confirm( 'Save marker ?' )) {
+								$('body').scope().$broadcast( "long-lang" , event.latLng );
+							}else{
+						        this.setPosition(marker_start);
+						        delete marker_start;   				
+							}
+						});
+					}, "json" );	   	
+			    });
+	
+
+					// Zoom to 9 when clicking on marker
+				// google.maps.event.addListener(marker,'click',function() {
+				// 	  map.setZoom(14);
+				// 	  map.setCenter(marker.getPosition());
+				// });
+			});
+		</script>
+	</div>	
+</section>
 <br>
 <section class="nav-tabs-custom" style="overflow: hidden" ng-controller="locationSettingtabs as tab">
     <ul class="nav nav-tabs">
@@ -64,26 +222,40 @@
         <li ng-class="{active:tab.isSet(1)}">
         	<a href ng-click="tab.setTab(1)">General Settings</a>
         </li>
-        <li ng-class="{active:tab.isSet(2)}">
-        	<a href ng-click="tab.setTab(2)">Advance Settings</a>
-        </li>
+<!--         <li ng-class="{active:tab.isSet(2)}">
+        	<a href ng-click="tab.setTab(2)">List of Markers</a>
+        </li> -->
+<!--         <li class="pull-right">
+        	<a href data-toggle="modal" id="add_marker" data-target="#create-marker-modal">
+	    		<i class="fa fa-plus-square"></i> &nbsp;
+	    		Add new marker info
+        	</a> -->
+		    <!-- ADD BRANCH MODAL -->
+<!-- 		    <div class="modal_for_new_marker" add-marker>
+		    	
+		    </div>
+        </li> -->
     </ul>
     <div ng-show="tab.isSet(1)" class="col-md-12" ng-controller="userDeptInfo">
     	<br>
     	<section ng-controller="saveLocation">
 	        <form role="form" ng-submit="saveMap()">
 	            <div class="col-md-12">
-	                <div class="form-group">
+	                <div class="form-group"hidden>
+	                    <label for="mapName">Location ID</label>
+	                    <input type="hidden" ng-model="mapdata.location_id" class="form-control" id="locationID" displaceholder="deptID">
+	                </div>
+	                <div class="form-group" hidden>
 	                    <label for="mapName">Department ID</label>
-	                    <input type="text" ng-model="mapdata.dept_id" class="form-control" id="deptID" displaceholder="deptID">
+	                    <input type="hidden" ng-model="mapdata.dept_id" class="form-control" id="deptID" placeholder="deptID">
 	                </div>
 	                <div class="form-group">
 	                    <label for="mapName">Map Name</label>
-	                    <input type="text" ng-model="mapdata.map_name" class="form-control" id="mapname" placeholder="Map name">
+	                    <input type="text" ng-model="mapdata.map_name" class="form-control" id="mapname" placeholder="Map name" required>
 	                </div>
 	                <div class="form-group">
 	                    <label for="mapType">Map Type</label>
-	                    <select class="form-control" ng-model="mapdata.road_type">
+	                    <select class="form-control" ng-model="mapdata.map_type">
 	                    	<option value="ROADMAP">Roadmap</option>
 	                    	<option value="SATELLITE">Satellite</option>
 	                    	<option value="HYBRID">Hybrid</option>
@@ -92,19 +264,31 @@
 	                </div>
 	                <div class="form-group">
 	                	<label>Map Description</label>
-	                	<textarea class="form-control" ng-model="mapdata.map_description" placeholder="Add your map description here..."></textarea>
+	                	<textarea class="form-control" ng-model="mapdata.map_description" placeholder="Add your map description here..." required></textarea>
 	                </div>
-	                <div class="col-xs-4 latLng-location">
+	                <div class="col-xs-4 latLng-location" hidden>
 	                	<label>Lat_Lng</label>
-	                	<input type="text" ng-model="mapdata.lat_lng" id="latitude" class="form-control" placeholder="Latitude" readonly>
+	                	<input type="hidden" ng-model="mapdata.lat_lng" id="latitude" class="form-control" placeholder="Latitude" readonly>
+	                </div>
+	                <div class="form-group latLng-location">
+	                	<label class="pull-left">Zoom Out</label>
+	                	<center>
+	                		<label ng-show="zoom.status == 'true' ">{{zoom.zoomValue}}</label>
+	                		<label ng-hide="zoom.status == 'false' "><span ng-bind="mapdata.zoom"></span></label>
+	                	</center>
+	                	<label class="pull-right">Zoom In</label>
+	                	<input type="range" ng-model="mapdata.zoom" ng-change="zoom()" id="latitude" min="1" max="21" class="form-control" placeholder="Latitude" list="range">
+						<datalist id="range" ng-repeat="num in range">
+							<option ng-repeat="num in range" ng-model="mapdata.zoom" value="{{num}}"></option>
+						</datalist>
 	                </div>
 	                <div class="col-xs-4 latLng-location">
 	                	<label>Latitude</label>
-	                	<input type="text" ng-model="maplat" id="latitude" class="form-control" placeholder="Latitude" readonly>
+	                	<input type="text" ng-model="mapdata.lat" id="latitude" class="form-control" placeholder="Latitude" readonly>
 	                </div>
 	                <div class="col-xs-4 latLng-location">
 	                	<label>Longitude</label>
-	                	<input type="text" ng-model="maplng" id="longitude" class="form-control" placeholder="Longitude" readonly>
+	                	<input type="text" ng-model="mapdata.lng" id="longitude" class="form-control" placeholder="Longitude" readonly>
 	                </div><br>
 	            </div><!-- /.box-body -->
 
@@ -117,8 +301,70 @@
     </div>
 
 
-    <div ng-show="tab.isSet(2)">
-         <h4>Tab 2</h4>
+     <div ng-show="tab.isSet(2)" class="col-md-12" ng-controller="userDeptInfo">
+     	<br>
+     	<div class="col-md-5 remove-side-padding margin-bottom-xs">
+     		<input type="text" class="form-control" ng-model="search_marker" placeholder="Search map marker here ..">
+     	</div>
+		<table class="table table-striped table-hover" ng-controller="markerList">
+			<tbody>
+				<tr>
+					<th>#</th>
+					<th>Name of Map</th>
+					<th>Department</th>
+					<th>Description</th>
+					<th>Status</th>
+					<th>Action</th>
+					<th>Set</th>
+				</tr>
+				<tr ng-repeat="list in markerList | filter: search_marker">
+					<td>{{$index+1}}</td>
+					<td class="data_content">
+						<a href ng-click="display_map_name(list.branch_id)" id="view_marker" data-toggle="modal" data-target="#view-marker-modal">
+							{{list.map_name}}
+						</a>
+						<div mapinfo-modal></div>
+					</td>
+					<td>{{list.branch_name 	}}</td>
+					<td>{{list.map_description 	}}</td>
+					<td>
+						<span ng-if="list.status == 'focus'" class="text-primary">Map on focus</span>
+						<span ng-if="list.status == 'not_focused'">Not Focused</span>
+					</td>
+					<td class="td_content">
+						<!-- If focused -->
+						<a href data-toggle="modal" ng-click="tab.setTab(1)" ng-if="list.status == 'focus'" >
+							<i class="fa fa-edit"></i>&nbsp;
+						</a>
+						<a href ng-if="list.status == 'focus'" >
+							<i class="fa fa-trash-o"></i>
+						</a>
+						<!-- End - focused -->
+						<!-- If not focused -->
+						<a href data-toggle="modal" id="edit_marker" ng-click="get_edit_info(list.branch_id)" ng-if="list.status == 'not_focused'" data-target="#edit-marker-modal">
+							<i class="fa fa-edit"></i>&nbsp;
+						</a>
+						<a href ng-if="list.status == 'not_focused'" ng-click="delete_map_info(list.location_id,list.branch_id)" >
+							<i class="fa fa-trash-o"></i>
+						</a>
+						<!-- End -  not focused -->
+						<div editmarker-modal></div>
+					</td>
+					<td>
+						<a href="" ng-if="list.status == 'focus'" class="text-danger">
+							<i class="fa fa-flag"></i>
+							&nbsp;
+							Already set as main map
+						</a>
+						<a href ng-click="set_as_main_map(list.branch_id)" ng-if="list.status == 'not_focused'">
+							<i class="fa fa-flag"></i>
+							&nbsp;
+							Set as main map
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<br>
     </div>
-
 </section>

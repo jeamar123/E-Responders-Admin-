@@ -1,0 +1,20 @@
+<div class="modal fade" id="view-branch-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" ng-controller="modalBranch">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i class="fa fa-edit"></i> View Department Info</h4>
+            </div>
+            <div class="modal-body">
+                <h3>{{branch.branch_name}}</h3>
+                <p>{{branch.branch_desc}}</p>
+                <p><label>Address: &nbsp;&nbsp;</label>{{branch.address}}</p>
+                <p><label>Mobile No.: &nbsp;&nbsp;</label>{{branch.mobile_no}}</p>
+                <p><label>Hotline No.: &nbsp;&nbsp;</label>{{branch.hotline_no}}</p>
+                <p ng-if="branch.webstat == 'no_site' "><label>Website: &nbsp;&nbsp;</label>{{branch.website}}</p>
+                <p ng-if="branch.webstat == 'has_site' "><label>Website: &nbsp;&nbsp;</label><a href="http://{{branch.website}}" target="__blank">{{branch.website}}</a></p>
+                <p><label>Email: &nbsp;&nbsp;</label>{{branch.email}}</p>                
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

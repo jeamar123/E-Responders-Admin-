@@ -2,6 +2,8 @@
     if (!$this->session->userdata('logged_in')) {
         header("location: ".base_url());     
     }
+    header("Cache-Control", "no-cache, no-store, must-revalidate");
+
  ?>
 
 <!DOCTYPE html>
@@ -22,9 +24,11 @@
             </aside><!-- /.right-side -->
         </div><!-- ./wrapper -->
 
+        <!-- For alert embed container -->
+        <div id="alert_tone_container" style="position: fixed;"></div> 
+
         <!-- Scripts -->
         <?php $this->load->view('public/temp/scripts') ?>
-
 
     </body>
 </html>

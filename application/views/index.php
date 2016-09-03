@@ -1,3 +1,9 @@
+<?php 
+    if ($this->session->userdata('logged_in')) {
+        header("location: ".base_url('admin/#/dashboard'));     
+    }
+	header("Cache-Control", "no-cache, no-store, must-revalidate");
+ ?>
 <!DOCTYPE html>
 <html ng-app="app">
 <head>
@@ -49,5 +55,7 @@
 	<script type="text/javascript" src="<?php echo base_url('assets/js/factory.js') ?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/js/directive.js') ?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/js/controllers.js') ?>"></script>
+   	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.10/angular-sanitize.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.2.1.js"></script>
 </body>
 </html>

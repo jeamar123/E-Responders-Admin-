@@ -1,48 +1,93 @@
 <div id="googleMap" style="width:100%x;height:400px;"></div>
+<section id="googleMapScript2" ng-controller="deptWidURL">
 <script type="text/javascript">
 	// Mao ning  para ma focus ang map sa CDO				
 	$("#googleMap").ready(function(){
-	
-	var myCenter=new google.maps.LatLng(8.48554117156531,124.65592492835538);
-			var mapProp = {
-			  center: myCenter,
-			  zoom: 15,
-			  mapTypeId: google.maps.MapTypeId.ROADMAP
-			  };
+		var contentString = "";
+		 $('#googleMapScript2').on('deptID_URL', function(event, data) {
+		 	
+			$.get( data.url + 'maps/get_all_markers/' + data.dept_id , function( response ) {
+				console.log(response)
+				if (response != '[]' || response != '' ) {
+				    for (a = 0; a < response.length; a++) {  
+				    	if (response[a]['status'] == "focus") {
+						    var map = new google.maps.Map(document.getElementById('googleMap'), {
+						      zoom: 15,
+						      center: new google.maps.LatLng(response[a]['lat'], response[a]['lng']),
+						      mapTypeId: google.maps.MapTypeId.ROADMAP
+						    });				    		
+				    	}
+				  	}
+				    var infowindow = new google.maps.InfoWindow();
 
-			var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+				    var marker, i;
 
-			var marker = new google.maps.Marker({
-			  position: myCenter,
-			  title:'Click to zoom'
-			  });
+				    for (i = 0; i < response.length; i++) {  
+					    if (response[i]['status'] == 'focus') {
+							marker = new google.maps.Marker({
+								position: new google.maps.LatLng(response[i]['lat'], response[i]['lng']),
+								map: map,
+								animation: google.maps.Animation.BOUNCE
+							});
+					    }
+					    //else{
+							// marker = new google.maps.Marker({
+							// 	position: new google.maps.LatLng(response[i]['lat'], response[i]['lng']),
+							// 	map: map
+							// });
+					  //   }
+					    google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
+					        return function() {
+								contentString = '<div id="infowindow" style="max-width: 400px;">'+
+														'<label style="color: #367FA9">'+response[i]['branch_name']+'</label><br>' +
+														'<span>'+response[i]['address']+'<span><br><br>' +
+														'<a href="http://'+response[i]['website']+'" target="__blank"><span>'+response[i]['website']+'<span></a><br>' +
+														'<span>Tel.# :'+response[i]['hotline_no']+' | Mobile # :'+response[i]['mobile_no']+'<span><br>' +
+													'</div>';			        	
+					        	infowindow.setContent(contentString);
+					        	infowindow.open(map, marker);
+					        }
+					      })(marker, i));
+						google.maps.event.addListener(marker, 'mouseout', function( event ){
+							infowindow.close();
+						});			      
+				    }					
+				}else{
+					alert('Map not yet set')
+				}
 
-			marker.setMap(map);
-
-			var contentString = "<h2>Hello World</h2>";
-			
-			var infowindow = new google.maps.InfoWindow({
-			    content: contentString
-			});
-
-			// Mao ning para makuha ang longitude ug latitude
-			google.maps.event.addListener(map, 'click', function( event ){
-				// var marker = new google.maps.Marker({
-				//   position: event.latLng,
-				//   title:'Click to zoom'
-				//   });
-				// alert('Lat'+ event.latLng.lat()+","+event.latLng.lng())
-				marker.setMap(map);
-			});
-			// Pop-up info window
-			google.maps.event.addListener(marker, 'click', function() {
-				infowindow.open(map,marker);
-			});
-			// Zoom to 9 when clicking on marker
-			// google.maps.event.addListener(marker,'click',function() {
-			//   map.setZoom(14);
-			//   map.setCenter(marker.getPosition());
-			//   });
+			}, "json" );	
+		 });
 	});
 	
 </script>
+</section>	
+<section ng-controller="saveLocation">
+	<div>
+		<h3 ng-bind="department_info.dept_name"></h3>
+	</div>
+	<br>
+	<div>
+		<label>Description</label>
+		<p ng-bind="department_info.dept_desc"></p>
+	</div><br>
+	<div>
+		<label>Contact Information</label>
+		<p>
+			Hotline No. ( <span ng-bind="department_info.hotline_no" class="text-info"></span> )  <br>
+			Mobile No.  &nbsp;( <span ng-bind="department_info.mobile_no" class="text-info"></span> ) 
+		</p>
+	</div>
+	<div>
+		<label>Address</label>
+		<p ng-bind="department_info.address"></p>
+	</div>
+	<div>
+		<label>Email</label>
+		<p ng-bind="department_info.email"></p>
+	</div>
+	<div>
+		<label>Website</label>
+		<p ng-bind="department_info.website"></p>
+	</div><br>
+</section>		

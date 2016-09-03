@@ -1,0 +1,126 @@
+		    <div class="modal fade" id="create-marker-modal" tabindex="-1" role="dialog" aria-hidden="true" dept-id>
+		        <div class="modal-dialog" ng-controller="markerList">
+		            <div class="modal-content">
+		                <div class="modal-header">
+		                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		                    <h4 class="modal-title"><i class="fa fa-map-marker"></i> Add New Marker</h4>
+		                </div>
+		                <form ng-submit="add_branch_marker()">
+		                    <div class="modal-body" id="marker_container">  
+		                    	<div class="col-md-7">
+									<div id="googleMap2" style="width:100%;min-height:400px;"></div>
+									<span class="text-info" style="position: relative;top: 11px;"><span class="text-danger">Note: </span>Drag the marker according to your desired location</span>
+									<section id="googleMapScript2">
+										<div ng-controller="deptWidURL">
+											<script type="text/javascript">
+											var map; //If we want access "map" outside of initialize(), this must be a global variable
+											var myCenter =  new google.maps.LatLng(8.4847678658204,124.65142692346);
+											
+											function initialize() {
+												var mapOptions = {
+													center: myCenter, // ;o)
+													zoom: 17,
+													mapTypeId: google.maps.MapTypeId.ROADMAP
+												};
+												map = new google.maps.Map(document.getElementById("googleMap2"),mapOptions); //this can't have var
+												var marker = new google.maps.Marker({
+													  position: myCenter,
+													  title:'Click to show information',
+													  draggable:true,
+													  animation: google.maps.Animation.DROP
+													  });
+
+												marker.setMap(map);
+
+												google.maps.event.addListener(marker, 'dragstart', function( event ){
+													marker_start = event.latLng;
+												});
+												google.maps.event.addListener(marker, 'dragend', function( event ){
+													if (confirm( 'Save marker ?' )) {
+														$('body').scope().$broadcast( "branch-long-lang" , event.latLng );
+													}else{
+												        this.setPosition(marker_start);
+												        delete marker_start;   				
+													}
+												});																						
+											}
+
+											$(document).ready(function(){
+
+												/* set tab change */
+												$('#add_marker').click(function(e){
+													initialize();
+													e.preventDefault();
+													//we have to set center for map after resize, but we need to know center BEFORE we resize it
+													google.maps.event.addListenerOnce(map, 'idle', function() {
+													   google.maps.event.trigger(map, 'resize');
+													   map.setCenter(myCenter); // var center = new google.maps.LatLng(50,3,10.9);
+													});
+												});
+											});
+	
+											</script>
+										</div>	
+									</section>
+									<br>		                    		
+		                    	</div>
+		                    	<div class="col-md-5">
+			                            
+			                        <div class="form-group" hidden>
+			                        	<label>Dept ID</label>
+			                            <input type="hidden" class="form-control" ng-model="marker_info.main_dept_id" placeholder="Write map's name">
+			                        </div>
+			                        <div class="form-group">
+			                        	<label>Map Name</label>
+			                            <input type="text" class="form-control" ng-model="marker_info.map_name" placeholder="Write map name" required>
+			                        </div>
+			                        <div class="form-group">
+			                        	<label>Attach to</label>
+			                            <select class="form-control" ng-model="marker_info.dept_id" required>
+			                            	<option value="">Select branch to attach</option>
+			                           		<option ng-repeat="branch in dept_branch_list" value="{{branch.branch_id}}">{{branch.branch_name}}</option>
+			                            </select>
+			                        </div>
+					                <div class="form-group">
+					                    <label for="mapType">Map Type</label>
+					                    <select class="form-control" ng-model="marker_info.map_type">
+					                    	<option value="">Default map type view : "ROADMAP"</option>
+					                    	<option value="ROADMAP">Roadmap</option>
+					                    	<option value="SATELLITE">Satellite</option>
+					                    	<option value="HYBRID">Hybrid</option>
+					                    	<option value="TERRAIN">Terrain</option>
+					                    </select>
+					                </div>
+					                <div class="form-group">
+					                	<label>Map Description</label>
+					                	<textarea class="form-control" ng-model="marker_info.map_description" placeholder="Add your map description here..." required></textarea>
+					                </div>
+					                <div class="form-group latLng-location">
+					                	<label class="pull-left">Zoom</label>
+					                	<center>
+					                		<label ng-show="zoom.status == 'true' ">{{zoom.zoomValue}}</label>
+					                		<label ng-hide="zoom.status == 'false' "><span ng-bind="marker_info.zoom"></span></label>
+					                	</center>
+					                	<input type="range" ng-model="marker_info.zoom" ng-change="zoom()" id="latitude" min="1" max="21" class="form-control" placeholder="Latitude" list="range">
+										<datalist id="range" ng-repeat="num in range">
+											<option ng-repeat="num in range" value="{{num}}"></option>
+										</datalist>
+					                </div>
+					                <div class="col-xs-4 latLng-location" hidden>
+					                	<label>Latitude</label>
+					                	<input type="text" ng-model="marker_info.lat" id="latitude" class="form-control" placeholder="Latitude" readonly>
+					                </div>
+					                <div class="col-xs-4 latLng-location" hidden>
+					                	<label>Longitude</label>
+					                	<input type="text" ng-model="marker_info.lng" id="longitude" class="form-control" placeholder="Longitude" readonly>
+					                </div>				                                  		
+			                    </div>
+		                    </div>
+		                    <div class="modal-footer clearfix">
+		                        <button type="submit" class="btn btn-primary"><i class="fa fa-plus-square"></i> Create Marker</button>
+		                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Discard</button>
+		                    </div>
+		                </form>
+		            </div><!-- /.modal-content -->
+		        </div><!-- /.modal-dialog -->
+		    </div><!-- /.modal -->        	

@@ -111,6 +111,84 @@ app.
 			}
 		}
 	]).
+	directive('addMarker', [
+		function directive(){
+			return{
+				"restrict"	 : "A",
+				"scope"		 : true,
+				"templateUrl": "/Admin-CDO/assets/js/template/add_new_marker.html",
+				"controller" : "",
+				"link"		 : function onLink ( scope , element , attributeSet ){
+					
+				}
+			}
+		}
+	]).
+	directive('mapinfoModal',[
+		function directive(){
+			return {
+				"restrict"	 : "A",
+				"scope"		 : true,
+				"templateUrl": "/Admin-CDO/assets/js/template/view_marker_info.html",
+				"controller" : "",
+				"link"		 : function onLink ( scope , element , attributeSet ){
+
+				}
+			}
+		}
+	]).
+	directive('editmarkerModal', [
+		function directive(){
+			return{
+				"restrict"	 : "A",
+				"scope"		 : true,
+				"templateUrl": "/Admin-CDO/assets/js/template/edit_marker_info.html",
+				"controller" : "modalController",
+				"link"		 : function onLink ( scope , element , attributeSet ){
+						
+				}
+			}
+		}
+	]).
+	directive('viewbranchModal', [
+		function directive(){
+			return{
+				"restrict"	 : "A",
+				"scope"		 : true,
+				"templateUrl": "/Admin-CDO/assets/js/template/view_branch_info.html",
+				"controller" : "modalController",
+				"link"		 : function onLink ( scope , element , attributeSet ){
+						
+				}
+			}
+		}
+	]).
+	directive('editpostModal', [
+		function directive(){
+			return{
+				"restrict"	 : "A",
+				"scope"		 : true,
+				"templateUrl": "/Admin-CDO/assets/js/template/edit_post_modal.html",
+				"controller" : "modalController",
+				"link"		 : function onLink ( scope , element , attributeSet ){
+						
+				}
+			}
+		}
+	]).
+	directive('editbranchModal', [
+		function directive(){
+			return{
+				"restrict"	 : "A",
+				"scope"		 : true,
+				"templateUrl": "/Admin-CDO/assets/js/template/edit_branch_info.html",
+				"controller" : "modalController",
+				"link"		 : function onLink ( scope , element , attributeSet ){
+						
+				}
+			}
+		}
+	]).
 	directive('loadingScreen',[
 		function directive(){
 			return{

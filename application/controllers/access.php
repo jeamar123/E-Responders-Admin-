@@ -1,7 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
+$sess = unserialize($_COOKIE['ci_session']);
 ini_set('display_errors', 1);
-
 class Access extends CI_Controller {
 
  	public function __construct()
@@ -12,7 +11,7 @@ class Access extends CI_Controller {
 
 	public function index()
 	{
-		$this->load->view('index');
+		$this->load->view('landing-page');
 	}
 
 	public function authentication()
@@ -31,9 +30,12 @@ class Access extends CI_Controller {
 	public function sign_out()
 	{
 		$this->session->sess_destroy();
+		$this->session->unset_userdata('logged_in');
+		$this->session->unset_userdata('username');
+		$this->session->unset_userdata('password');
 		header("location: ".base_url());
 	}
 }
 
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
+/* End of file access.php */
+/* Location: ./application/controllers/access.php */

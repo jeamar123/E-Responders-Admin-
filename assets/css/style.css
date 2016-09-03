@@ -1,3 +1,5 @@
+/*Text*/
+
 .user-fname-wrapper
 {
 	max-width: 77%;
@@ -5,6 +7,16 @@
 .user-fname
 {
 	display: inline-block;
+}
+.form-input
+{
+	font-weight: bold;
+	color: #000 !important;
+}
+.sidebar-menu li a span:focus,
+.sidebar-menu li ul li a:focus
+{
+	color: black;	
 }
 .loading-view-container
 {
@@ -32,3 +44,285 @@
 	margin-left: 13px;
 	margin-bottom: 35px !important;
 }
+#edit-marker-modal,
+#edit-branch-modal div.modal-dialog div form div.modal-body,
+#create-branch-modal div.modal-dialog div form div.modal-body
+{
+   overflow: hidden;
+} 
+#view-marker-modal div.modal-dialog,
+#create-marker-modal div.modal-dialog,
+#edit-marker-modal div.modal-dialog
+{
+	width: 90% !important;
+	min-height: 500px;
+	overflow: hidden;
+}
+#edit-branch-modal div.modal-dialog,
+#create-branch-modal div.modal-dialog 
+{
+	width: 90% !important;
+	min-height: 600px;
+	overflow: hidden;
+}
+#edit_post_modal div.modal-dialog
+{
+	width: 55%;
+	margin: 50px auto;
+}
+#marker_container
+{
+	height: 450px !important;
+}
+.scrollFix {
+    line-height: 1.35;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.title_head {
+	padding-left: 10px;
+}
+
+.btn-post {
+	margin-top: 10px;
+}
+.post_img {
+	max-height: 450px;
+}
+.profile_content img { 
+	height: 480px;
+	width: 100%;
+}
+
+/*Show Description*/
+.disabled-text
+{
+  color : #999;
+}
+.desc1,
+.desc2,
+.desc3,
+.desc4
+{
+  display: none;
+  position: absolute;
+}
+.action-icon-1:hover .desc1,
+.action-icon-2:hover .desc2,
+.action-icon-3:hover .desc3,
+.action-icon-4:hover .desc4
+{
+  display: block;
+  background: #efefef;
+  text-align: center;
+} 
+/**/
+/*FancyBox*/
+.fancybox-inner
+{
+	min-height: 43px;
+}
+/*Generic CSS*/
+.remove-side-padding {
+	padding-left : 0px !important;
+	padding-right : 0px !important;
+}
+.remove-side-padding-left {
+	padding-left : 0px !important;
+}
+.remove-side-padding-right {
+	padding-right : 0px !important;
+}
+.margin-top-bottom-xs {
+	margin: 10px 0 10px 0;
+}
+.margin-top-xs {
+	margin-top: 10px;
+}
+.margin-top-sm {
+	margin-top: 20px;
+}
+.margin-top-md {
+	margin-top: 30px;
+}
+.margin-top-lg {
+	margin-top: 50px;
+}
+.margin-bottom-xs {
+	margin-bottom: 10px;
+}
+.margin-bottom-sm {
+	margin-bottom: 20px;
+}
+.margin-bottom-md {
+	margin-bottom: 30px;
+}
+.margin-bottom-lg {
+	margin-bottom: 50px;
+}
+/**/
+
+.animation:first-child {
+  -webkit-transition: 1s;
+}
+.animation.ng-enter {
+  opacity: 0;
+}
+.animation.ng-leave {
+  opacity: 1;
+}
+.animation.ng-enter.ng-enter-active {
+  opacity: 1;
+}
+.animation.ng-leave.ng-leave-active {
+  opacity: 0;
+}
+
+
+/*Dashboard*/
+
+/*basic reset*/
+* {margin: 0; padding: 0;}
+
+/*form styles*/
+.form-group {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.form-group label {
+    float: left;
+}
+.fs-title {
+    font-size: 15px;
+}
+.fs-subtitle {
+    font-weight: normal;
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 20px;
+}
+#msform {
+  width: 100%;
+  margin: 18px auto;
+  text-align: center;
+  position: relative;
+}
+
+#msform fieldset {
+  background: white;
+  border: 0 none;
+  border-radius: 3px;
+  box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
+  padding: 20px 30px;
+  
+  box-sizing: border-box;
+  width: 78%;
+  margin: 0 10%;
+  
+  /*stacking fieldsets above each other*/
+  position: absolute;
+  right: 24px;
+}
+/*Hide all except first fieldset*/
+#msform fieldset:not(:first-of-type) {
+  display: none;
+}
+/*inputs*/
+#msform input, #msform textarea, select {
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  color: #2C3E50;
+  background: #fff;
+}
+/*buttons*/
+#msform .action-button {
+  width: 100px;
+  background: #27AE60;
+  font-weight: bold;
+  color: white;
+  border: 0 none;
+  border-radius: 1px;
+  cursor: pointer;
+  padding: 10px 5px;
+  margin: 10px 5px;
+}
+#msform .action-button:hover, #msform .action-button:focus {
+  box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
+}
+/*headings*/
+.fs-title {
+  text-transform: uppercase;
+  color: #2C3E50;
+  margin-bottom: 10px;
+}
+.fs-subtitle {
+  font-weight: normal;
+  color: #666;
+  margin-bottom: 20px;
+}
+/*progressbar*/
+#progressbar {
+  margin-bottom: 30px;
+  overflow: hidden;
+  /*CSS counters to number the steps*/
+  counter-reset: step;
+}
+#progressbar li {
+  list-style-type: none;
+  color: #000;
+  text-transform: uppercase;
+  width: 33.33%;
+  float: left;
+  position: relative;
+}
+#progressbar li:before {
+  content: counter(step);
+  counter-increment: step;
+  width: 20px;
+  line-height: 20px;
+  display: block;
+  color: #333;
+  background: white;
+  border-radius: 3px;
+  margin: 0 auto 5px auto;
+}
+/*progressbar connectors*/
+#progressbar li:after {
+  content: '';
+  width: 100%;
+  height: 2px;
+  background: white;
+  position: absolute;
+  left: -50%;
+  top: 9px;
+  z-index: -1; /*put it behind the numbers*/
+}
+#progressbar li:first-child:after {
+  /*connector not needed before the first step*/
+  content: none; 
+}
+/*marking active/completed steps green*/
+/*The number of the step and the connector before it = green*/
+#progressbar li.active:before,  #progressbar li.active:after{
+  background: #27AE60;
+  color: white;
+}
+
+
+/*Responsive*/
+@media (max-width: 992px) {
+	#marker_container
+	{
+		overflow: scroll;
+	}
+	#edit_post_modal div.modal-dialog
+	{
+		width: 90%;
+	}	
+}
+
+

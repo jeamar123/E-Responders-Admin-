@@ -31,6 +31,7 @@ class Model_Auth extends CI_Model {
 
 		foreach ($query as $key => $value) {
 			$this->session->set_userdata('user_id',$value->user_id);
+			$this->session->set_userdata('dept_id',$value->dept_id);
 		}
 		return $query;
 	}

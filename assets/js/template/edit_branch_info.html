@@ -1,0 +1,63 @@
+<!-- EDIT BRANCH MODAL -->
+<div class="modal fade" id="edit-branch-modal" ng-controller="editBranchModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i class="fa fa-edit"></i> Edit Branch Info
+            </div>
+            <form ng-submit="save_edit_branch()">
+                <div class="modal-body">
+                    <div class="col-md-6">
+                        <div class="form-group" hidden>
+                            <input ng-model="branch.branch_id" type="hidden" class="form-control" placeholder="Department ID">
+                        </div>
+                        <div class="form-group">
+                            <label>Branch Name</label>
+                            <input ng-model="branch.branch_name" type="text" class="form-control" placeholder="Branch name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <input ng-model="branch.address" type="text" class="form-control" placeholder="Address" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select class="form-control" ng-model="branch.category" required>
+                                <option value="" disabled>Choose category</option>
+                                <option>Police</option>
+                                <option>Hospital</option>
+                                <option>Fire Station</option>
+                            </select>
+                        </div>  
+                        <div class="form-group">
+                            <label>Set your description</label>
+                            <textarea class="form-control" style="width: 100%" ng-model="branch.description" placeholder="Department description" required></textarea>
+                        </div>                                  
+                    </div>      
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Hotline No.</label>
+                            <input ng-model="branch.hotline_no" type="number" class="form-control" placeholder="Telephone no." required>
+                        </div>
+                        <div class="form-group">
+                            <label>Mobile No.</label>
+                            <input ng-model="branch.mobile_no" type="number" class="form-control" placeholder="Mobile No." required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input ng-model="branch.email" type="email" class="form-control" placeholder="Email" >
+                        </div>
+                        <div class="form-group">
+                            <label>Website</label>
+                            <input ng-model="branch.website" type="text" class="form-control" placeholder="Website">
+                        </div>                                          
+                    </div>                
+                </div>
+                <div class="modal-footer clearfix">
+                    <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
+                    <button type="submit" class="btn btn-success pull-right" style="margin-right: 5px;"><i class="fa fa-edit"></i> Save Changes</button> 
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

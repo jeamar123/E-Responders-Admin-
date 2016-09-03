@@ -1,0 +1,149 @@
+		<section id="edit_map_location">
+		    <div class="modal fade" id="edit-marker-modal" tabindex="-1" role="dialog" aria-hidden="true" dept-id>
+		        <div class="modal-dialog">
+		            <div class="modal-content">
+		                <div class="modal-header">
+		                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		                    <h4 class="modal-title"><i class="fa fa-map-marker"></i> Edit Marker</h4>
+		                </div>
+		                <form ng-submit="edit_unfocused_marker()">
+		                    <div class="modal-body" id="marker_container">  
+		                    	<div class="col-md-7">
+									<div id="map-canvas" style="width:100%;min-height:400px;"></div>
+									<span class="text-info" style="position: relative;top: 11px;"><span class="text-danger">Note: </span>Drag the marker according to your desired location</span>
+									<section id="googleMapScript2">
+										<div ng-controller="deptWidURL">
+											<script type="text/javascript">
+
+												var map; //If we want access "map" outside of initialize(), this must be a global variable
+												function initialize_map() {	
+													$('body').on('edit_lat_lng', function(event, data) {
+														var mtype = data.map_type;
+														var map_center =  new google.maps.LatLng(data.lat,data.lng);
+														switch(data.map_type){
+															case 'SATELLITE' :
+																var mapOptions = {
+																  center: map_center,
+																  zoom: 17,
+																  mapTypeId: google.maps.MapTypeId.SATELLITE
+																  };break;
+															case 'HYBRID' :
+																var mapOptions = {
+																  center: map_center,
+																  zoom: 17,
+																  mapTypeId: google.maps.MapTypeId.HYBRID
+																  };break;
+															case 'TERRAIN' :
+																var mapOptions = {
+																  center: map_center,
+																  zoom: 17,
+																  mapTypeId: google.maps.MapTypeId.TERRAIN
+																  };break;
+															default :
+																var mapOptions = {
+																  center: map_center,
+																  zoom: 17,
+																  mapTypeId: google.maps.MapTypeId.ROADMAP
+																  };
+														}
+														map = new google.maps.Map(document.getElementById("map-canvas"),mapOptions); //this can't have var
+														var marker = new google.maps.Marker({
+															  position: map_center,
+															  title:'Click to show information',
+															  draggable:true,
+															  animation: google.maps.Animation.DROP
+															  });
+
+														marker.setMap(map);	
+
+														google.maps.event.addListener(marker, 'dragstart', function( event ){
+															marker_start = event.latLng;
+														});
+														google.maps.event.addListener(marker, 'dragend', function( event ){
+															if (confirm( 'Save marker ?' )) {
+																$('body').scope().$broadcast( "edit-branch-long-lang" , event.latLng );
+															}else{
+														        this.setPosition(marker_start);
+														        delete marker_start;   				
+															}
+														});														
+													});																					
+												}
+
+												$(document).ready(function(){
+													$('.td_content').on('click','#edit_marker',function(e){
+														initialize_map();
+														$('body').on('edit_lat_lng', function(event, data) {
+															var map_center =  new google.maps.LatLng(data.lat,data.lng);
+															e.preventDefault();
+															//we have to set center for map after resize, but we need to know center BEFORE we resize it
+															google.maps.event.addListenerOnce(map, 'idle', function() {
+															   google.maps.event.trigger(map, 'resize');
+															   map.setCenter(map_center); // var center = new google.maps.LatLng(50,3,10.9);
+															});
+														});
+													});
+												});
+	
+											</script>
+										</div>	
+									</section>
+									<br>		                    		
+		                    	</div>
+		                    	<div class="col-md-5">
+			                        <div class="form-group" hidden>
+			                        	<label>Main Dept ID</label>
+			                            <input type="hidden" class="form-control" name="main_dept_id" ng-model="marker_data.main_dept_id" placeholder="Write map's name">
+			                        </div>
+			                        <div class="form-group" hidden>
+			                        	<label>This Dept ID</label>
+			                            <input type="hidden" class="form-control" name="this_dept_id" ng-model="marker_data.this_dept_id" placeholder="Write map's name">
+			                        </div>
+			                        <div class="form-group">
+			                        	<label>Map Name</label>
+			                            <input type="text" class="form-control"  name="map_name" ng-model="marker_data.map_name" placeholder="Write map name" required>
+			                        </div>
+					                <div class="form-group">
+					                    <label for="mapType">Map Type</label>
+					                    <select class="form-control" name="map_type" ng-model="marker_data.map_type">
+					                    	<option value="">Default map type view : "ROADMAP"</option>
+					                    	<option value="ROADMAP">Roadmap</option>
+					                    	<option value="SATELLITE">Satellite</option>
+					                    	<option value="HYBRID">Hybrid</option>
+					                    	<option value="TERRAIN">Terrain</option>
+					                    </select>
+					                </div>
+					                <div class="form-group">
+					                	<label>Map Description</label>
+					                	<textarea class="form-control" name="map_description" ng-model="marker_data.map_description" placeholder="Add your map description here..." required></textarea>
+					                </div>
+					                <div class="form-group latLng-location">
+					                	<label class="pull-left">Zoom</label>
+					                	<center>
+					                		<label ng-show="zoom.status == 'true' ">{{zoom.zoomValue}}</label>
+					                		<label ng-hide="zoom.status == 'false' "><span ng-bind="marker_data.zoom"></span></label>
+					                	</center>
+					                	<input type="range" name="zoom" ng-model="marker_data.zoom" ng-change="zoom()" id="latitude" min="1" max="21" class="form-control" placeholder="Latitude" list="range">
+										<datalist id="range" ng-repeat="num in range">
+											<option ng-repeat="num in range" value="{{num}}"></option>
+										</datalist>
+					                </div>
+					                <div class="col-xs-4 latLng-location">
+					                	<label>Latitude</label>
+					                	<input type="text" name="lat" ng-model="marker_data.lat" id="latitude" class="form-control" placeholder="Latitude" readonly>
+					                </div>
+					                <div class="col-xs-4 latLng-location">
+					                	<label>Longitude</label>
+					                	<input type="text" name="lng" ng-model="marker_data.lng" id="longitude" class="form-control" placeholder="Longitude" readonly>
+					                </div>				                                  		
+			                    </div>
+		                    </div>
+		                    <div class="modal-footer clearfix">
+		                        <button type="submit" class="btn btn-primary"><i class="fa fa-plus-square"></i> Save Changes</button>
+		                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Discard</button>
+		                    </div>
+		                </form>
+		            </div><!-- /.modal-content -->
+		        </div><!-- /.modal-dialog -->
+		    </div><!-- /.modal -->        		
+		</section>

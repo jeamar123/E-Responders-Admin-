@@ -1,0 +1,80 @@
+		<section id="view_map_location" ng-controller="viewMapModalController">
+		    <div class="modal fade" id="view-marker-modal" tabindex="-1" role="dialog" aria-hidden="true" dept-id>
+		        <div class="modal-dialog">
+		            <div class="modal-content">
+		                <div class="modal-header">
+		                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		                    <h4 class="modal-title"><i class="fa fa-map-marker"></i> {{display_map_name}}</h4>
+		                </div>
+		                <div class="modal-body">
+		                	<div id="map-canvas2" style="width:100%;min-height:400px;"></div>
+							<section id="googleMapScript2">
+								<div ng-controller="deptWidURL">
+									<script type="text/javascript">
+
+										var map2; //If we want access "map" outside of initialize(), this must be a global variable
+										function initialize_map2() {	
+											$('body').on('view_lat_lng', function(event, data) {
+												var mtype = data.map_type;
+												var map_center2 =  new google.maps.LatLng(data.lat,data.lng);
+												switch(data.map_type){
+													case 'SATELLITE' :
+														var mapOptions = {
+														  center: map_center2,
+														  zoom: 17,
+														  mapTypeId: google.maps.MapTypeId.SATELLITE
+														  };break;
+													case 'HYBRID' :
+														var mapOptions = {
+														  center: map_center2,
+														  zoom: 17,
+														  mapTypeId: google.maps.MapTypeId.HYBRID
+														  };break;
+													case 'TERRAIN' :
+														var mapOptions = {
+														  center: map_center2,
+														  zoom: 17,
+														  mapTypeId: google.maps.MapTypeId.TERRAIN
+														  };break;
+													default :
+														var mapOptions = {
+														  center: map_center2,
+														  zoom: 17,
+														  mapTypeId: google.maps.MapTypeId.ROADMAP
+														  };
+												}
+												map2 = new google.maps.Map(document.getElementById("map-canvas2"),mapOptions); //this can't have var
+												var marker = new google.maps.Marker({
+													  position: map_center2,
+													  title:'Click to show information',
+													  animation: google.maps.Animation.BOUNCE
+													  });
+
+												marker.setMap(map2);	
+											});																					
+										}
+
+		$(document).ready(function(){
+			$('.data_content').on('click','#view_marker',function(e){
+				initialize_map2();
+				$('body').on('view_lat_lng', function(event, data) {
+					var map_center2 =  new google.maps.LatLng(data.lat,data.lng);
+					e.preventDefault();
+					//we have to set center for map after resize, but we need to know center BEFORE we resize it
+					google.maps.event.addListenerOnce(map2, 'idle', function() {
+					   google.maps.event.trigger(map2, 'resize');
+					   map2.setCenter(map_center2); // var center = new google.maps.LatLng(50,3,10.9);
+					});
+				});
+			});
+		});
+
+									</script>
+								</div>	
+							</section>		                	                	
+		                </div>
+
+		            </div><!-- /.modal-content -->
+		        </div><!-- /.modal-dialog -->
+		    </div><!-- /.modal -->        		
+		</section>

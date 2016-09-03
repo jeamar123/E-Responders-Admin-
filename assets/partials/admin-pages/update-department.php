@@ -15,17 +15,23 @@
 	<section class="container">
 		<div class="fileinput fileinput-new" data-provides="fileinput">
 			<div class="fileinput-new thumbnail" style="max-width: 1040px; max-height: 399px;">
-				<img ng-show="dept_img" src="{{url}}assets/img/{{dept.dept_image}}" alt="...">
+				<img ng-show="dept_img" src="{{url}}assets/uploads/{{dept.dept_image}}" alt="...">
 			</div>
 			<div class="fileinput-preview fileinput-exists thumbnail"  style="max-width: 1040px; max-height: 399px;"></div>
 			<div>
 				<span class="btn btn-default btn-file">
-					<span class="fileinput-new">Select image</span>
-					<span class="fileinput-exists">Save image</span>
-					<input type="file" name="...">
+					<span class="fileinput-new">Update Image</span>
+					<span class="fileinput-exists" ng-click="save_dept_img()">Change</span>
+					<input type="file" id="post_file" name="userfile" onchange="angular.element(this).scope().file_upload(this.files)">
 				</span>
-				<a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+				<button id="btn_upload" ng-click="save_dept_img()" class="btn btn-success fileinput-upload fileinput-upload-button"><i class="glyphicon glyphicon-upload"></i> Upload</button>
+				<a href="#" class="btn btn-danger fileinput-exists" ng-click="clear()" data-dismiss="fileinput">Remove</a>
 			</div>
+            <span>
+                <img src="{{base_url}}../assets/img/ajax-loader2.gif" ng-if="loading_screen == true ">
+                <span class="text-primary" ng-if="loading_screen == true ">Your file is uploading...</span>
+                <span id="loading_msg" class="text-success" ng-if="loading_msg == true ">File successfully uploaded</span>
+            </span>			
 		</div>
 	</section>
 	<div class="contentHere">
@@ -42,16 +48,18 @@
 					</div>
 					<div class="form-group col-md-12">
 						<label>Description</label>
-						<input type="text" class="form-control" ng-model="dept.dept_desc" placeholder="Add department description" required>
+						<textarea class="form-control" ng-model="dept.dept_desc" placeholder="Add department description" required></textarea>
+						
 					</div>
-					<div class="form-group col-md-12">
+<!-- 					<div class="form-group col-md-12">
 						<label>Category</label>
 						<select class="form-control" ng-model="dept.category" required>
+							<option value="" disabled>Choose category</option>
 							<option>Police</option>
 							<option>Hospital</option>
 							<option>Fire Station</option>
 						</select>
-					</div>
+					</div> -->
 					<div class="form-group col-md-12">
 						<label>Hotline Number</label>
 						<input type="text" class="form-control" ng-model="dept.hotline_no" name="hotline" placeholder="Hotline number" >
@@ -69,6 +77,10 @@
 						<input type="text" class="form-control" ng-model="dept.address" name="address" placeholder="Enter Address" required>
 					</div>
 					<div class="form-group col-md-12">
+						<label>Features / Services</label>
+						<textarea class="form-control" ng-model="dept.features" placeholder="Add services or features which your department provides" required></textarea>
+					</div>
+					<div class="form-group col-md-12">
 						<label>Email</label>
 						<input type="email" class="form-control" ng-model="dept.email" name="email" placeholder="Add email">
 					</div>
@@ -84,3 +96,4 @@
 		</section>
 	</div>
 </section>
+
